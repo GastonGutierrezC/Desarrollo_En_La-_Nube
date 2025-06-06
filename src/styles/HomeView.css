@@ -1,0 +1,47 @@
+/* src/styles/HomeView.css */
+
+body {
+  margin: 0;
+  background-color: #0d1b2a; /* Azul marino oscuro */
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.home-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.home-container button {
+  margin: 0.5rem 0;
+  padding: 0.75rem 1.5rem;
+  background-color: #1b263b; /* Azul marino más claro */
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.home-container button:hover {
+  background-color: #415a77; /* Azul más claro al pasar el mouse */
+}
+
+hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #415a77;
+  width: 80%;
+}

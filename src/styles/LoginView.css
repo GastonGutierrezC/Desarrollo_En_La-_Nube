@@ -1,0 +1,61 @@
+/* src/styles/LoginView.css */
+
+body {
+  margin: 0;
+  background-color: #0d1b2a; /* Azul marino oscuro */
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.login-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.login-container input {
+  width: 80%;
+  max-width: 300px;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.login-container input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #415a77;
+}
+
+.login-container button {
+  margin: 0.5rem 0;
+  padding: 0.75rem 1.5rem;
+  background-color: #1b263b;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #415a77;
+}
+
+hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #415a77;
+  width: 80%;
+}
