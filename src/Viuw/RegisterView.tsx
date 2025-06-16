@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { AuthController } from "../Controller/AuthController";
-import "../styles/RegisterView.css"; 
+import "../styles/RegisterView.css";
 
 const RegisterView: React.FC = () => {
+  const [birthrate, setBirthrate] = useState("");
+  const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [cellphone, setCellphone] = useState("");
   const [password, setPassword] = useState("");
 
   const handleRegister = async () => {
     try {
-      await AuthController.registerWithEmail({ email, password });
+      await AuthController.registerWithEmail({
+        email,
+        password,
+        name,
+        city,
+        birthrate,
+        cellphone,
+      });
       alert("Usuario registrado!");
     } catch (error) {
       alert("Error al registrar usuario");
@@ -39,6 +50,30 @@ const RegisterView: React.FC = () => {
   return (
     <div className="register-container">
       <h1>Registro</h1>
+      <input
+        type="text"
+        placeholder="Nombre completo"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Ciudad"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+      />
+      <input
+        type="date"
+        placeholder="Fecha de nacimiento"
+        value={birthrate}
+        onChange={(e) => setBirthrate(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Celular"
+        value={cellphone}
+        onChange={(e) => setCellphone(e.target.value)}
+      />
       <input
         type="email"
         placeholder="Correo electrónico"
