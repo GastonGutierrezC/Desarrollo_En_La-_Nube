@@ -7,38 +7,40 @@ import {
   Timestamp,
   query,
   where,
-  getDocs
+  getDocs,
 } from "firebase/firestore";
+import { Post, PostData } from "../Model/PostModel";
 
 export const postService = {
-  async postPost(userId: string, text: string) {
+  async postPost(userId: string, text: string, image?: string): Promise<string> {
     const date = Timestamp.now();
-    const newPost = {
+
+    const newPost: any = {
       userId,
       text,
       date,
+      image, 
     };
+
     const postRef = await addDoc(collection(firestore, "Posts"), newPost);
     return postRef.id;
   },
 
+  async deletePost(id: string): Promise<void> {
+    await deleteDoc(doc(firestore, "Posts", id));
+  },
 
-    async deletePost(id: string){
-         await deleteDoc(doc(firestore, "Posts", id))
-    },
+  async getPost(userId: string): Promise<Post[]> {
+    const postRef = collection(firestore, "Posts");
+    const queryByUserId = query(postRef, where("userId", "==", userId));
+    const data = await getDocs(queryByUserId);
 
-async getPost(userId: string) {
-  const postRef = collection(firestore, "Posts");
-  const queryByUserId = query(postRef, where("userId", "==", userId));
-  const data = await getDocs(queryByUserId);
-  return data.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as {
-      userId: string;
-      text: string;
-      date: Timestamp;
-    }),
-  }));
-}
-
-}
+    return data.docs.map((doc) => {
+      const postData = doc.data() as PostData;
+      return {
+        id: doc.id,
+        ...postData,
+      };
+    });
+  },
+};

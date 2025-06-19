@@ -1,22 +1,25 @@
+// src/views/HomeView.tsx
 import React, { useEffect, useState } from "react";
 import { AuthController } from "../Controller/AuthController";
 import { PostController, Post } from "../Controller/PostController";
+import { imageService } from "../Service/Image-service";
 import "../styles/HomeView.css";
 
 const HomeView: React.FC = () => {
   const [userId, setUserId] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPostText, setNewPostText] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = await AuthController.getCurrentUser(); 
+    (async () => {
+      const user = await AuthController.getCurrentUser();
       if (user) {
         setUserId(user.uid);
         await loadPosts(user.uid);
       }
-    };
-    fetchUser();
+    })();
   }, []);
 
   const loadPosts = async (uid: string) => {
@@ -25,10 +28,32 @@ const HomeView: React.FC = () => {
   };
 
   const createPost = async () => {
-    if (!userId || !newPostText.trim()) return;
-    await PostController.createPost(userId, newPostText);
+    if (!userId || !newPostText.trim()) {
+      alert("El texto del post es obligatorio.");
+      return;
+    }
+
+    if (!selectedImage) {
+      alert("Debes seleccionar una imagen para el post.");
+      return;
+    }
+
+    setUploading(true);
+
+    const imageUrl = await imageService.postImage(selectedImage);
+
+    if (!imageUrl) {
+      alert("Hubo un error al subir la imagen.");
+      setUploading(false);
+      return;
+    }
+
+    await PostController.createPost(userId, newPostText.trim(), imageUrl);
+
     setNewPostText("");
+    setSelectedImage(null);
     await loadPosts(userId);
+    setUploading(false);
   };
 
   const deletePostById = async (id: string) => {
@@ -84,7 +109,19 @@ const HomeView: React.FC = () => {
         onChange={(e) => setNewPostText(e.target.value)}
         style={{ padding: "8px", width: "80%", marginRight: "10px" }}
       />
-      <button onClick={createPost}>Crear post</button>
+      <input
+        type="file"
+        accept="image/png, image/jpeg"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            setSelectedImage(e.target.files[0]);
+          }
+        }}
+        style={{ marginLeft: "10px" }}
+      />
+      <button onClick={createPost} disabled={uploading || !selectedImage}>
+        {uploading ? "Subiendo..." : "Crear post"}
+      </button>
 
       <hr />
       <h2>Posts del usuario</h2>
@@ -93,15 +130,26 @@ const HomeView: React.FC = () => {
       ) : (
         <ul>
           {posts.map((post) => (
-            <li key={post.id} style={{ marginBottom: "10px" }}>
+            <li key={post.id} style={{ marginBottom: "20px" }}>
               <strong>{post.text}</strong> -{" "}
-              {post.date?.toDate().toLocaleString()}
+              {post.date?.toDate
+                ? post.date.toDate().toLocaleString()
+                : new Date(post.date).toLocaleString()}
               <button
                 onClick={() => deletePostById(post.id)}
                 style={{ marginLeft: "10px" }}
               >
                 Eliminar
               </button>
+              {post.image && (
+                <div>
+                  <img
+                    src={post.image}
+                    alt="Post image"
+                    style={{ maxWidth: "300px", marginTop: "8px" }}
+                  />
+                </div>
+              )}
             </li>
           ))}
         </ul>

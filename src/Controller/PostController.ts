@@ -1,4 +1,3 @@
-// src/Controller/PostController.ts
 import { postService } from "../Service/post-service";
 
 export interface Post {
@@ -6,6 +5,7 @@ export interface Post {
   userId: string;
   text: string;
   date: any;
+  image?: string; 
 }
 
 export const PostController = {
@@ -13,12 +13,14 @@ export const PostController = {
     return await postService.getPost(userId);
   },
 
-  async createPost(userId: string, text: string): Promise<void> {
-    if (!text.trim()) return;
-    await postService.postPost(userId, text.trim());
-  },
+async createPost(userId: string, text: string, imageUrl: string): Promise<void> {
+  if (!text.trim() || !imageUrl) return;
+
+  await postService.postPost(userId, text.trim(), imageUrl);
+},
+
 
   async deletePost(id: string): Promise<void> {
     await postService.deletePost(id);
-  }
+  },
 };
