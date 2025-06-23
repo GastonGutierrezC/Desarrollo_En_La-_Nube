@@ -8,6 +8,9 @@ import Register from "./pages/register";
 import { auth } from "./firebaseinit";
 import { onAuthStateChanged } from "firebase/auth";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -25,6 +28,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
+            <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route
           path="/"
