@@ -1,9 +1,9 @@
-// src/views/HomeView.tsx
 import React, { useEffect, useState } from "react";
 import { AuthController } from "../Controller/AuthController";
 import { PostController, Post } from "../Controller/PostController";
 import { imageService } from "../Service/Image-service";
 import "../styles/HomeView.css";
+import { usePostNotifications } from "../Controller/PostNotificationController";
 
 const HomeView: React.FC = () => {
   const [userId, setUserId] = useState<string>("");
@@ -21,6 +21,8 @@ const HomeView: React.FC = () => {
       }
     })();
   }, []);
+
+  usePostNotifications(userId); 
 
   const loadPosts = async (uid: string) => {
     const userPosts = await PostController.getPosts(uid);
