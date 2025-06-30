@@ -4,6 +4,9 @@ import { PostController, Post } from "../Controller/PostController";
 import { imageService } from "../Service/Image-service";
 import "../styles/HomeView.css";
 import { usePostNotifications } from "../Controller/PostNotificationController";
+import { useReactionNotifications } from "../Controller/ReactionsController";
+
+const MODERATE_POSTS_URL = "https://moderateposts-r3plriklfq-uc.a.run.app";
 
 const HomeView: React.FC = () => {
   const [userId, setUserId] = useState<string>("");
@@ -23,6 +26,7 @@ const HomeView: React.FC = () => {
   }, []);
 
   usePostNotifications(userId); 
+  useReactionNotifications(userId);
 
   const loadPosts = async (uid: string) => {
     const userPosts = await PostController.getPosts(uid);
@@ -51,6 +55,15 @@ const HomeView: React.FC = () => {
     }
 
     await PostController.createPost(userId, newPostText.trim(), imageUrl);
+
+    // Llamada a función de moderación en Firebase
+    try {
+      const response = await fetch(MODERATE_POSTS_URL);
+      const resultText = await response.text();
+      console.log("Moderación:", resultText);
+    } catch (error) {
+      console.error("Error al llamar a la función de moderación:", error);
+    }
 
     setNewPostText("");
     setSelectedImage(null);
