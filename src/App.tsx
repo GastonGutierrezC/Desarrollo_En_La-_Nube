@@ -10,6 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ExploreView from "./Viuw/ExploreView";
 
 const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -42,6 +43,12 @@ const App: React.FC = () => {
           path="/register"
           element={!user ? <Register /> : <Navigate to="/" replace />}
         />
+     
+        <Route
+          path="/explore"
+          element={user ? <ExploreView /> : <Navigate to="/login" replace />}
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
